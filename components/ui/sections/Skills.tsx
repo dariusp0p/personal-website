@@ -45,7 +45,7 @@ const Skills = () => {
       <h2 className="text-5xl font-bold mb-10 text-left w-full max-w-4xl mx-auto">
         Skills
       </h2>
-      <div className="flex flex-wrap gap-6 justify-center">
+      <div className="flex flex-wrap gap-6 justify-center max-w-4xl w-full mx-auto">
         {skills.map((skill, idx) => (
           <SkillCard key={idx} icon={skill.icon} name={skill.name} />
         ))}

@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "motion/react";
 import { AuroraBackground } from "../AuroraBackground";
 import { FaEnvelope, FaLinkedin, FaGithub, FaDownload } from "react-icons/fa";
 import ProfilePicture from "../ProfilePicture";
@@ -17,17 +16,17 @@ const Hero = () => {
           <div className="flex flex-col md:flex-row items-center justify-center p-4">
             <ProfilePicture src="/me.jpeg" alt="Darius Pop" />
             <div className="md:ml-8 text-center md:text-left">
-              <h1 className="text-6xl font-bold mb-4 dark:text-white text-neutral-600 select-text">
+              <h1 className="text-6xl font-bold mb-2 dark:text-white text-neutral-600 select-text">
                 Darius Pop
               </h1>
               <p className="text-2xl mb-2 dark:text-white text-neutral-600 select-text">
                 Computer Science Student
               </p>
-              <p className="text-2xl mb-4 dark:text-white text-neutral-600 select-text">
+              {/* <p className="text-2xl mb-4 dark:text-white text-neutral-600 select-text">
                 Future Software Engineer{" "}
-              </p>
+              </p> */}
               <p className="text-l mb-6 dark:text-neutral-300 text-neutral-500 select-text">
-                🇷🇴 Cluj-Napoca, Romania{" "}
+                📍 Cluj-Napoca, Romania{" "}
               </p>
             </div>
           </div>
@@ -54,16 +53,16 @@ const Hero = () => {
             />
             <SocialButton
               icon={<FaDownload />}
-              href="/resume.pdf"
+              href="/Darius_Pop_CV.pdf"
               download
-              name="Resume"
+              name="CV"
             />
           </div>
         </div>
         <AboutMeCard
           paragraphs={[
-            "Second-year CS student at UBB Cluj-Napoca with early experience in web development and software engineering. I have developed and deployed web and desktop applications, covering design, implementation, and deployment.",
-            "Currently exploring software architecture principles and modern technologies, with a growing focus on AI/ML. Seeking an internship where I can contribute production-quality code and build data-driven features while learning from strong engineering practices.",
+            "Second-year CS student at UBB Cluj-Napoca with early experience in web development and software engineering. I’ve built and deployed both web and desktop applications, taking them from idea to production.",
+            "I’m currently exploring Cloud Infrastructure, DevOps, and AI/ML. I’m looking for an internship where I can contribute meaningful work while learning as much as possible from experienced engineers.",
             "Outside of tech, I stay active through music and martial arts. As Music Director in my local church band, I play piano and coordinate live performances, which has strengthened my discipline, teamwork, and focus under pressure. I have also practiced Muay Thai and Karate, experiences that taught me resilience, self-discipline, and perseverance, qualities I carry into both personal and professional challenges.",
           ]}
         />

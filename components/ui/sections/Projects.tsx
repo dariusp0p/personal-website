@@ -3,7 +3,8 @@ import ProjectCard from "../ProjectCard";
 
 const projects = [
   {
-    title: "Desktop Application - AddPoster",
+    title: "Desktop Application",
+    name: "AddPoster",
     description:
       "Cross-platform desktop app to automate posting in Facebook groups. Features custom HWID-bound license manager, monthly expiry, code obfuscation, auto-update, and packaged for Windows/macOS.",
     tech: [
@@ -22,9 +23,12 @@ const projects = [
       "/projects/AddPoster/demo_6.png",
     ],
     link: "/addposter",
+    inProgress: false,
+    deployed: true,
   },
   {
-    title: "Python Application - HotelSimulator",
+    title: "Python Application",
+    name: "Hotel Simulator",
     description:
       "Python app with layered architecture, drag-and-drop floor canvas, advanced reservation checks, hotel occupancy simulator, timeline, statistics, and 3D graph.",
     tech: ["Python", "Software Architecture", "PyQt", "SQLite"],
@@ -35,9 +39,12 @@ const projects = [
       "/projects/HotelSimulator/demo_4.png",
     ],
     link: "/hotelsimulator",
+    inProgress: false,
+    deployed: true,
   },
   {
-    title: "Full-stack Website Application - Mindify",
+    title: "Full-stack Website Application",
+    name: "Mindify",
     description:
       "Hackathon project: Django app for real-time group learning, room creation, and AI integration. Built with a team during ITEC Hackathon.",
     tech: [
@@ -55,9 +62,12 @@ const projects = [
       "/projects/Mindify/demo_5.png",
     ],
     link: "/mindify",
+    inProgress: false,
+    deployed: false,
   },
   {
-    title: "Full-stack Website - Forever Living Products Team",
+    title: "Full-stack Website",
+    name: "Super Powers Team Website",
     description:
       "Presentation website with authentication, ready for video tutorial integration. Collaborated on visual design and brand identity, including team logo.",
     tech: [
@@ -77,13 +87,8 @@ const projects = [
       "/projects/ForeverWebsite/demo_4.png",
     ],
     link: "https://www.superpowersteam.ro",
-  },
-  {
-    title: "Personal Portfolio Website",
-    description: "This very website! :)",
-    tech: ["Next.js", "React", "Tailwind CSS", "TypeScript"],
-    images: ["/projects/Portfolio/demo_1.png"],
-    link: "https://dp0p.me",
+    inProgress: false,
+    deployed: true,
   },
 ];
 
@@ -96,18 +101,26 @@ const Projects = () => {
       <h2 className="text-5xl font-bold mb-10 text-left w-full max-w-4xl mx-auto">
         My Projects
       </h2>
-      <div className="grid gap-8 w-full max-w-4xl mx-auto grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
+      <div className="grid gap-8 w-full max-w-4xl mx-auto grid-cols-1 md:grid-cols-2">
         {projects.map((project, idx) => (
           <ProjectCard
             key={idx}
             title={project.title}
+            name={project.name}
             description={project.description}
             tech={project.tech}
-            images={project.images}
             link={project.link}
+            inProgress={project.inProgress}
+            deployed={project.deployed}
           />
         ))}
       </div>
+      <a
+        href="/projects"
+        className="mt-10 text-3xl font-semibold text-neutral-600 decoration-neutral-600 hover:text-blue-600 hover:underline hover:decoration-blue-600 decoration-2 underline-offset-2 transition-all duration-200 transform hover:scale-105"
+      >
+        More projects &rarr;
+      </a>
     </section>
   );
 };

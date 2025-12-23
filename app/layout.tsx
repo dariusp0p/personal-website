@@ -36,7 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <DevScreenSize />
+          {/* <DevScreenSize /> */}
         </ThemeProvider>
       </body>
     </html>

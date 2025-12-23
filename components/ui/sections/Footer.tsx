@@ -43,7 +43,7 @@ const Footer = () => (
       ))}
     </div>
     <span className="text-xs text-neutral-500 dark:text-neutral-400">
-      © 2025 Darius Pop. All rights reserved.
+      © {new Date().getFullYear()} Darius Pop. All rights reserved.
     </span>
   </footer>
 );

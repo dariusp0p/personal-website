@@ -6,7 +6,7 @@ import Footer from "@/components/ui/sections/Footer";
 
 const navItems = [
   { name: "Home", link: "#hero" },
-  { name: "Projects", link: "#projects" },
+  { name: "Projects", link: "/projects" },
   { name: "Skills", link: "#skills" },
 ];
 

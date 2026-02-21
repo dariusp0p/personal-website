@@ -96,7 +96,7 @@ const Projects = () => {
   return (
     <section
       id="projects"
-      className="flex flex-col items-center bg-background p-4 lg:p-64 lg:pt-10 lg:pb-16"
+      className="flex flex-col items-center bg-background px-4 py-8 lg:p-64 lg:pt-10 lg:pb-16"
     >
       <h2 className="text-5xl font-bold mb-10 text-left w-full max-w-4xl mx-auto">
         My Projects

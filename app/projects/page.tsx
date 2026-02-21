@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { FloatingNav } from "@/components/ui/sections/FloatingNavbar";
 import ProjectCard from "@/components/ui/ProjectCard";
@@ -7,7 +8,11 @@ import MobileFiltersModal from "@/components/ui/MobileFiltersModal";
 import ProjectSearchBar from "@/components/ui/ProjectSearchBar";
 import Footer from "@/components/ui/sections/Footer";
 
-const navItems = [{ name: "Home", link: "/" }];
+const navItems = [
+  { name: "Home", link: "/" },
+  { name: "Projects", link: "/projects/" },
+  { name: "Education", link: "/education/" },
+];
 
 const projects = [
   {
@@ -100,109 +105,25 @@ const projects = [
   },
 ];
 
-// Get all unique techs
 const allTechs = Array.from(
-  new Set(projects.flatMap((project) => project.tech))
+  new Set(projects.flatMap((project) => project.tech)),
 ).sort();
 
 export default function ProjectsPage() {
   const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState<{
-    inProgress: boolean;
-    deployed: boolean;
-    tech: string[];
-  }>({
-    inProgress: false,
-    deployed: false,
-    tech: [],
-  });
-
-  const [showFilters, setShowFilters] = useState(false);
-
-  const handleFilterChange = (key: "inProgress" | "deployed") => {
-    setFilters((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const handleTechFilterChange = (tech: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      tech: prev.tech.includes(tech)
-        ? prev.tech.filter((t) => t !== tech)
-        : [...prev.tech, tech],
-    }));
-  };
-
-  const filteredProjects = projects.filter((project) => {
-    const matchesSearch =
-      project.title.toLowerCase().includes(search.toLowerCase()) ||
-      project.name.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus =
-      (!filters.inProgress && !filters.deployed) ||
-      (filters.inProgress && project.inProgress) ||
-      (filters.deployed && project.deployed);
-    const matchesTech =
-      filters.tech.length === 0 ||
-      filters.tech.every((t) => project.tech.includes(t));
-    return matchesSearch && matchesStatus && matchesTech;
-  });
-
   return (
-    <main className="container mx-auto py-8 px-4">
+    <>
       <FloatingNav navItems={navItems} />
-      <h1 className="text-4xl font-bold mt-20 mb-6 text-center">My Projects</h1>
-      <MobileFiltersModal
-        open={showFilters}
-        onClose={() => setShowFilters(false)}
-        filters={filters}
-        onStatusChange={handleFilterChange}
-        onTechChange={handleTechFilterChange}
-        allTechs={allTechs}
-      />
-      <div className="flex flex-col md:flex-row gap-8 items-start justify-center">
-        {/* Left Sidebar (filters, desktop only) */}
-        <div className="hidden md:block flex-shrink-0 w-64">
-          <ProjectFilters
-            filters={filters}
-            onStatusChange={handleFilterChange}
-            onTechChange={handleTechFilterChange}
-            allTechs={allTechs}
+      <main>
+        <div className="max-w-3xl mx-auto px-4">
+          <h1 className="text-4xl font-bold text-left mt-8">Projects</h1>
+          <hr className="border-t border-neutral-200 my-4" />
+          <ProjectSearchBar
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {/* Feed - centered with room for right sidebar */}
-        <section className="flex flex-col items-center w-full">
-          <div className="w-full max-w-xl mx-auto">
-            <div className="mb-6">
-              <ProjectSearchBar
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                showFiltersButton={true}
-                onFiltersClick={() => setShowFilters(true)}
-              />
-            </div>
-            <div className="flex flex-col w-full">
-              {filteredProjects.length === 0 ? (
-                <p className="text-gray-500 text-center">No projects found.</p>
-              ) : (
-                filteredProjects.map((project, idx) => (
-                  <ProjectCard
-                    key={idx}
-                    title={project.title}
-                    name={project.name}
-                    description={project.description}
-                    tech={project.tech}
-                    link={project.link}
-                    inProgress={project.inProgress}
-                    deployed={project.deployed}
-                  />
-                ))
-              )}
-            </div>
-          </div>
-        </section>
-        {/* Right Sidebar (empty, reserved for future use) */}
-        <div className="hidden md:block flex-shrink-0 w-64" />
-      </div>
-      <Footer />
-    </main>
+      </main>
+    </>
   );
 }

@@ -5,19 +5,21 @@ import Projects from "@/components/ui/sections/Projects";
 import Footer from "@/components/ui/sections/Footer";
 
 const navItems = [
-  { name: "Home", link: "#hero" },
+  { name: "Home", link: "/" },
   { name: "Projects", link: "/projects" },
-  { name: "Skills", link: "#skills" },
+  { name: "Education", link: "/education" },
 ];
 
 export default function Home() {
   return (
-    <main>
+    <>
       <FloatingNav navItems={navItems} />
-      <Hero />
-      <Projects />
-      <Skills />
-      <Footer />
-    </main>
+      <main>
+        <Hero />
+        <Projects />
+        <Skills />
+        <Footer />
+      </main>
+    </>
   );
 }

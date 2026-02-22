@@ -2,10 +2,8 @@
 
 import React, { useState } from "react";
 import { FloatingNav } from "@/components/ui/sections/FloatingNavbar";
+import ProjectSearchEngine from "@/components/ui/ProjectSearchEngine";
 import ProjectCard from "@/components/ui/ProjectCard";
-import ProjectFilters from "@/components/ui/ProjectFilters";
-import MobileFiltersModal from "@/components/ui/MobileFiltersModal";
-import ProjectSearchBar from "@/components/ui/ProjectSearchBar";
 import Footer from "@/components/ui/sections/Footer";
 
 const navItems = [
@@ -105,22 +103,37 @@ const projects = [
   },
 ];
 
-const allTechs = Array.from(
-  new Set(projects.flatMap((project) => project.tech)),
-).sort();
+const staticStatusCategory = {
+  name: "status",
+  fields: ["Deployed", "In Progress"],
+};
+
+const dynamicCategories = [
+  { name: "languages", fields: ["JavaScript", "TypeScript", "Python"] },
+  { name: "type", fields: ["Web", "Mobile", "CLI"] },
+];
 
 export default function ProjectsPage() {
-  const [search, setSearch] = useState("");
+  const [searchBarText, setSearchBarText] = useState("");
+  const [filters, setFilters] = useState<{ [category: string]: Set<string> }>({
+    status: new Set<string>(),
+    languages: new Set<string>(),
+    type: new Set<string>(),
+  });
+
+  const filterCategories = [staticStatusCategory, ...dynamicCategories];
+
   return (
     <>
       <FloatingNav navItems={navItems} />
       <main>
-        <div className="max-w-3xl mx-auto px-4">
-          <h1 className="text-4xl font-bold text-left mt-8">Projects</h1>
-          <hr className="border-t border-neutral-200 my-4" />
-          <ProjectSearchBar
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+        <div className="max-w-3xl mx-auto px-4 pt-28">
+          <ProjectSearchEngine
+            searchBarText={searchBarText}
+            setSearchBarText={setSearchBarText}
+            filters={filters}
+            setFilters={setFilters}
+            categories={filterCategories}
           />
         </div>
       </main>

@@ -118,7 +118,7 @@ export default function ProjectsPage() {
     })),
   ];
 
-  const projects = fetchedProjects.map((project) => {
+  const mappedProjects = fetchedProjects.map((project) => {
     const tagIds = projectTags
       .filter((pt: any) => pt.project_id === project.id)
       .map((pt: any) => pt.tag_id);
@@ -126,10 +126,42 @@ export default function ProjectsPage() {
       .filter((tag: any) => tagIds.includes(tag.id))
       .map((tag: any) => tag.name);
 
-    if (project.deployed) ptag.push("Deployed");
-    if (project.in_progress) ptag.push("In Progress");
+    // if (project.deployed) ptag.push("Deployed");
+    // if (project.in_progress) ptag.push("In Progress");
 
     return { ...project, ptag };
+  });
+
+  const filteredProjects = mappedProjects.filter((project) => {
+    // Search by title, name, description, or tech tags
+    const searchLower = searchBarText.toLowerCase();
+    const matchesSearch =
+      project.title?.toLowerCase().includes(searchLower) ||
+      project.name?.toLowerCase().includes(searchLower) ||
+      project.description?.toLowerCase().includes(searchLower) ||
+      project.ptag.some((tag: string) =>
+        tag.toLowerCase().includes(searchLower),
+      );
+
+    // Filter by status
+    const statusFilters = filters["status"];
+    const matchesStatus =
+      !statusFilters ||
+      statusFilters.size === 0 ||
+      (statusFilters.has("Deployed") && project.deployed) ||
+      (statusFilters.has("In Progress") && project.in_progress);
+
+    // Filter by other categories
+    const otherCategories = Object.keys(filters).filter(
+      (cat) => cat !== "status",
+    );
+    const matchesOtherFilters = otherCategories.every((cat) => {
+      const selected = filters[cat];
+      if (!selected || selected.size === 0) return true;
+      return project.ptag.some((tag: string) => selected.has(tag));
+    });
+
+    return matchesSearch && matchesStatus && matchesOtherFilters;
   });
 
   return (
@@ -148,7 +180,7 @@ export default function ProjectsPage() {
             {loading && <div>Loading projects...</div>}
             {!loading && projects.length === 0 && <div>No projects found.</div>}
             {!loading &&
-              projects.map((project) => (
+              filteredProjects.map((project) => (
                 <ProjectCard
                   key={project.id}
                   title={project.title}
@@ -160,7 +192,7 @@ export default function ProjectsPage() {
                   deployed={project.deployed}
                 />
               ))}
-            {!loading && projects.length % 2 === 1 && (
+            {!loading && filteredProjects.length % 2 === 1 && (
               <div className="invisible h-full">
                 <ProjectCard
                   title=""

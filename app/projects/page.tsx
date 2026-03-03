@@ -14,10 +14,7 @@ const navItems = [
 
 const projects = [
   {
-    title: "Desktop Application",
     name: "AddPoster",
-    description:
-      "Cross-platform desktop app to automate posting in Facebook groups. Features custom HWID-bound license manager, monthly expiry, code obfuscation, auto-update, and packaged for Windows/macOS.",
     tech: [
       "Python",
       "Selenium WebDriver",
@@ -26,38 +23,13 @@ const projects = [
       "PyInstaller",
       "Inno Setup",
     ],
-    images: [
-      "/projects/AddPoster/demo_1.png",
-      "/projects/AddPoster/demo_2.png",
-      "/projects/AddPoster/demo_3.png",
-      "/projects/AddPoster/demo_4.png",
-      "/projects/AddPoster/demo_6.png",
-    ],
-    link: "/addposter",
-    inProgress: false,
-    deployed: true,
   },
   {
-    title: "Python Application",
     name: "Hotel Simulator",
-    description:
-      "Python app with layered architecture, drag-and-drop floor canvas, advanced reservation checks, hotel occupancy simulator, timeline, statistics, and 3D graph.",
     tech: ["Python", "Software Architecture", "PyQt", "SQLite"],
-    images: [
-      "/projects/HotelSimulator/demo_1.png",
-      "/projects/HotelSimulator/demo_2.png",
-      "/projects/HotelSimulator/demo_3.png",
-      "/projects/HotelSimulator/demo_4.png",
-    ],
-    link: "/hotelsimulator",
-    inProgress: false,
-    deployed: true,
   },
   {
-    title: "Full-stack Website Application",
     name: "Mindify",
-    description:
-      "Hackathon project: Django app for real-time group learning, room creation, and AI integration. Built with a team during ITEC Hackathon.",
     tech: [
       "Python",
       "Django",
@@ -65,22 +37,9 @@ const projects = [
       "Project Management",
       "Team Coordination",
     ],
-    images: [
-      "/projects/Mindify/demo_1.png",
-      "/projects/Mindify/demo_2.png",
-      "/projects/Mindify/demo_3.png",
-      "/projects/Mindify/demo_4.png",
-      "/projects/Mindify/demo_5.png",
-    ],
-    link: "/mindify",
-    inProgress: false,
-    deployed: false,
   },
   {
-    title: "Full-stack Website",
     name: "Super Powers Team Website",
-    description:
-      "Presentation website with authentication, ready for video tutorial integration. Collaborated on visual design and brand identity, including team logo.",
     tech: [
       "Web Development",
       "Web Design",
@@ -91,15 +50,6 @@ const projects = [
       "MySQL",
       "Client Work",
     ],
-    images: [
-      "/projects/ForeverWebsite/demo_1.png",
-      "/projects/ForeverWebsite/demo_2.png",
-      "/projects/ForeverWebsite/demo_3.png",
-      "/projects/ForeverWebsite/demo_4.png",
-    ],
-    link: "https://www.superpowersteam.ro",
-    inProgress: false,
-    deployed: true,
   },
 ];
 
@@ -108,22 +58,79 @@ const staticStatusCategory = {
   fields: ["Deployed", "In Progress"],
 };
 
-const dynamicCategories = [
-  { name: "languages", fields: ["JavaScript", "TypeScript", "Python"] },
-  { name: "type", fields: ["Web", "Mobile", "CLI"] },
-  // { name: "other", fields: ["AI", "Open Source", "Client Work"] },
-];
-
 export default function ProjectsPage() {
   const [searchBarText, setSearchBarText] = useState("");
-  const [filters, setFilters] = useState<{ [category: string]: Set<string> }>({
-    status: new Set<string>(),
-    languages: new Set<string>(),
-    type: new Set<string>(),
-    other: new Set<string>(),
-  });
 
-  const filterCategories = [staticStatusCategory, ...dynamicCategories];
+  const [filters, setFilters] = useState<{ [category: string]: Set<string> }>(
+    {},
+  );
+
+  const [fetchedProjects, setFetchedProjects] = useState<any[]>([]);
+
+  const [tagCategories, setTagCategories] = useState<any[]>([]);
+  const [tags, setTags] = useState<any[]>([]);
+  const [projectTags, setProjectTags] = useState<any[]>([]);
+
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        const resProjects = await fetch("/api/projects");
+        const projectsData = await resProjects.json();
+
+        const resTagCategories = await fetch("/api/tag_categories");
+        const tagCategoriesData = await resTagCategories.json();
+
+        const resTags = await fetch("/api/tags");
+        const tagsData = await resTags.json();
+
+        const resProjectTags = await fetch("/api/project_tags");
+        const projectTagsData = await resProjectTags.json();
+
+        setFetchedProjects(projectsData);
+        setTagCategories(tagCategoriesData);
+        setTags(tagsData);
+        setProjectTags(projectTagsData);
+
+        const initialFilters: { [category: string]: Set<string> } = {};
+        initialFilters[staticStatusCategory.name] = new Set<string>();
+        tagCategoriesData.forEach((cat: any) => {
+          initialFilters[cat.name] = new Set<string>();
+        });
+        setFilters(initialFilters);
+
+        setLoading(false);
+      } catch {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  const filterCategories = [
+    staticStatusCategory,
+    ...tagCategories.map((cat: any) => ({
+      name: cat.name,
+      fields: tags
+        .filter((t: any) => t.category_id === cat.id)
+        .map((t: any) => t.name),
+    })),
+  ];
+
+  const projects = fetchedProjects.map((project) => {
+    const tagIds = projectTags
+      .filter((pt: any) => pt.project_id === project.id)
+      .map((pt: any) => pt.tag_id);
+    const ptag = tags
+      .filter((tag: any) => tagIds.includes(tag.id))
+      .map((tag: any) => tag.name);
+
+    if (project.deployed) ptag.push("Deployed");
+    if (project.in_progress) ptag.push("In Progress");
+
+    return { ...project, ptag };
+  });
 
   return (
     <>
@@ -137,6 +144,23 @@ export default function ProjectsPage() {
             setFilters={setFilters}
             categories={filterCategories}
           />
+          <div className="mt-8">
+            {loading && <div>Loading projects...</div>}
+            {!loading && projects.length === 0 && <div>No projects found.</div>}
+            {!loading &&
+              projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  title={project.title}
+                  name={project.name}
+                  description={project.description}
+                  tech={project.ptag}
+                  link={project.url}
+                  inProgress={project.in_progress}
+                  deployed={project.deployed}
+                />
+              ))}
+          </div>
         </div>
       </main>
     </>

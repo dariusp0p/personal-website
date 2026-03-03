@@ -7,10 +7,8 @@ const pool = new Pool({
 
 export async function GET() {
   const { rows } = await pool.query(
-    `SELECT id, title, name, url, description, in_progress, deployed
-     FROM projects
-     ORDER BY id DESC
-     LIMIT 50`
+    `SELECT *
+     FROM tag_categories`
   );
   return Response.json(rows);
 }

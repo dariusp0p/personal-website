@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { FiSun, FiMoon } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -12,9 +13,11 @@ export function ThemeToggle() {
   if (!mounted) return null;
 
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.1 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-full text-neutral-600 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+      className="p-2 rounded-full text-primary-foreground hover:text-muted-foreground transition-colors duration-300"
       aria-label="Toggle theme"
     >
       {theme === "dark" ? (
@@ -22,6 +25,6 @@ export function ThemeToggle() {
       ) : (
         <FiMoon className="h-4 w-4" />
       )}
-    </button>
+    </motion.button>
   );
 }

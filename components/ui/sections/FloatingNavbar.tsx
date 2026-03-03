@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "../ThemeToggle";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export const FloatingNav = ({
+const FloatingNav = ({
   navItems,
   className,
 }: {
@@ -14,10 +15,10 @@ export const FloatingNav = ({
     name: string;
     link: string;
     icon?: React.ReactNode;
-    children?: { name: string; link: string }[];
   }[];
   className?: string;
 }) => {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
   const directionRef = useRef<"up" | "down" | null>(null);
@@ -34,7 +35,7 @@ export const FloatingNav = ({
         document.body.offsetHeight,
         document.documentElement.clientHeight,
         document.documentElement.scrollHeight,
-        document.documentElement.offsetHeight
+        document.documentElement.offsetHeight,
       );
 
       const isAtBottom = window.innerHeight + currentScrollY >= docHeight - 20;
@@ -64,7 +65,6 @@ export const FloatingNav = ({
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <AnimatePresence mode="wait">
@@ -74,26 +74,41 @@ export const FloatingNav = ({
           y: visible ? 0 : -100,
           opacity: visible ? 1 : 0,
         }}
-        transition={{ duration: 0.2 }}
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.4 }}
         className={cn(
-          "flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-transparent dark:border-white/[0.2] rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] z-[5000] px-8 py-2 items-center justify-center space-x-4",
-          className
+          "flex max-w-fit fixed top-8 inset-x-0 mx-auto border-2 border-border rounded-full z-5000 px-4 py-1 items-center justify-center",
+          "bg-primary text-primary-foreground shadow-lg",
+          "dark:bg-primary dark:text-primary-foreground",
+          className,
         )}
       >
         {navItems.map((navItem, idx) => (
-          <Link
+          <motion.div
             key={`link-${idx}`}
-            href={navItem.link}
-            className={cn(
-              "relative dark:text-neutral-50 items-center flex space-x-1 text-neutral-600 dark:hover:text-neutral-300 hover:text-neutral-500"
-            )}
+            initial={{ marginLeft: 12, marginRight: 12 }}
+            whileHover={{ marginLeft: 16, marginRight: 16, scale: 1.05 }} // 16px = 1rem
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="flex"
           >
-            {navItem.icon && <span className="mr-1">{navItem.icon}</span>}
-            <span className="text-sm">{navItem.name}</span>
-          </Link>
+            <Link
+              key={`link-${idx}`}
+              href={navItem.link}
+              className={cn(
+                "relative items-center flex space-x-1 transition-colors duration-300",
+                "text-primary-foreground hover:text-muted-foreground",
+                pathname === navItem.link && "text-accent-foreground",
+              )}
+            >
+              {navItem.icon && <span className="mr-1">{navItem.icon}</span>}
+              <span className="text-sm">{navItem.name}</span>
+            </Link>
+          </motion.div>
         ))}
         <ThemeToggle />
       </motion.div>
     </AnimatePresence>
   );
 };
+
+export { FloatingNav };

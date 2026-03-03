@@ -111,6 +111,7 @@ const staticStatusCategory = {
 const dynamicCategories = [
   { name: "languages", fields: ["JavaScript", "TypeScript", "Python"] },
   { name: "type", fields: ["Web", "Mobile", "CLI"] },
+  // { name: "other", fields: ["AI", "Open Source", "Client Work"] },
 ];
 
 export default function ProjectsPage() {
@@ -119,6 +120,7 @@ export default function ProjectsPage() {
     status: new Set<string>(),
     languages: new Set<string>(),
     type: new Set<string>(),
+    other: new Set<string>(),
   });
 
   const filterCategories = [staticStatusCategory, ...dynamicCategories];

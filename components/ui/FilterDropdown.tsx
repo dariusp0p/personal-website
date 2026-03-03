@@ -80,7 +80,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       </span>
       {visible && (
         <div
-          className={`absolute left-0 mt-2 min-w-[220px] bg-background border border-muted rounded shadow-lg p-2 z-10 transition-opacity duration-200 ${
+          className={`absolute left-0 mt-2 min-w-30 bg-background border border-muted rounded shadow-lg p-2 z-10 transition-opacity duration-200 ${
             open ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
@@ -91,7 +91,9 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
                 checked={filters[category.name]?.has(field) || false}
                 onChange={() => handleCheckbox(field)}
               />
-              <span className="text-sm">{field}</span>
+              <span className="text-primary-foreground text-sm hover:text-accent-foreground transition-colors duration-100 cursor-pointer">
+                {field}
+              </span>
             </label>
           ))}
         </div>

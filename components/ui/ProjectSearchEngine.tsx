@@ -20,7 +20,7 @@ const ProjectSearchEngine: React.FC<ProjectSearchEngineProps> = ({
   categories,
 }) => {
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="w-full flex flex-col gap-4 border-b-2 border-muted">
       <div className="flex flex-row justify-between items-center">
         <SearchBar
           value={searchBarText}

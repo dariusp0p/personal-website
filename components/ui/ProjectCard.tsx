@@ -21,12 +21,34 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   return (
     <div
-      className="relative bg-card rounded-xl shadow-xl p-4 flex flex-col max-w-xl mx-auto mb-8
-        border-2 border-neutral-200 dark:border-neutral-700
-        transition-all duration-300 ease-in-out
-        hover:scale-105 hover:border-blue-500 dark:hover:border-blue-500"
-      style={{ borderStyle: "solid" }}
+      className="relative h-full min-h-65 md:min-h-75 p-4 flex flex-col
+        bg-card rounded-xl border-2 border-border shadow-xl
+        transition-all duration-300 ease-in-out hover:scale-[1.02]"
     >
+      {/* <ThumbnailCarousel images={images} alt={title} /> */}
+      <h3 className="text-2xl font-bold mb-1 text-card-foreground">{title}</h3>
+      <h4 className="text-2xl mb-2 text-card-foreground">"{name}"</h4>
+      <p className="text-base mb-3 text-card-foreground">{description}</p>
+      <div className="flex flex-wrap gap-2 mb-3">
+        {tech.map((t, idx) => (
+          <span
+            key={idx}
+            className="bg-muted text-xs text-card-foreground px-2 py-1 rounded"
+          >
+            {t}
+          </span>
+        ))}
+      </div>
+      <div className="flex-1" />
+      <a
+        href={link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block text-accent-foreground underline decoration-transparent font-semibold hover:decoration-accent-foreground decoration-1 underline-offset-2 transition-all duration-200"
+        style={{ marginTop: "auto" }}
+      >
+        Go to page &rarr;
+      </a>
       <div className="absolute bottom-4 right-4 flex gap-2">
         {deployed && (
           <span className="flex items-center bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">
@@ -41,30 +63,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           </span>
         )}
       </div>
-      {/* <ThumbnailCarousel images={images} alt={title} /> */}
-      <h3 className="text-2xl font-bold mb-1 text-card-foreground">{title}</h3>
-      <h4 className="text-2xl mb-2 text-card-foreground">"{name}"</h4>
-      <p className="text-base mb-3 text-card-foreground">{description}</p>
-      <div className="flex flex-wrap gap-2 mb-3">
-        {tech.map((t, idx) => (
-          <span
-            key={idx}
-            className="bg-neutral-200 dark:bg-neutral-700 text-xs px-2 py-1 rounded"
-          >
-            {t}
-          </span>
-        ))}
-      </div>
-      <div className="flex-1" />
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block text-blue-600 underline decoration-transparent font-semibold hover:decoration-blue-600 decoration-1 underline-offset-2 transition-all duration-200"
-        style={{ marginTop: "auto" }}
-      >
-        Go to page &rarr;
-      </a>
     </div>
   );
 };

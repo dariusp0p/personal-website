@@ -135,7 +135,7 @@ export default function ProjectsPage() {
   return (
     <>
       <FloatingNav navItems={navItems} />
-      <main>
+      <main className="mb-18 min-h-[90vh]">
         <div className="max-w-3xl mx-auto px-4 pt-28">
           <ProjectSearchEngine
             searchBarText={searchBarText}
@@ -144,7 +144,7 @@ export default function ProjectsPage() {
             setFilters={setFilters}
             categories={filterCategories}
           />
-          <div className="mt-8">
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             {loading && <div>Loading projects...</div>}
             {!loading && projects.length === 0 && <div>No projects found.</div>}
             {!loading &&
@@ -160,9 +160,23 @@ export default function ProjectsPage() {
                   deployed={project.deployed}
                 />
               ))}
+            {!loading && projects.length % 2 === 1 && (
+              <div className="invisible h-full">
+                <ProjectCard
+                  title=""
+                  name=""
+                  description=""
+                  tech={[]}
+                  link=""
+                  inProgress={false}
+                  deployed={false}
+                />
+              </div>
+            )}
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }

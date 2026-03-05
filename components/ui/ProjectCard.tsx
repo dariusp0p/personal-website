@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 interface ProjectCardProps {
@@ -40,15 +41,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         ))}
       </div>
       <div className="flex-1" />
-      <a
-        href={link}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href={`/projects/${link}`}
         className="inline-block text-accent-foreground underline decoration-transparent font-semibold hover:decoration-accent-foreground decoration-1 underline-offset-2 transition-all duration-200"
         style={{ marginTop: "auto" }}
       >
         Go to page &rarr;
-      </a>
+      </Link>
       <div className="absolute bottom-4 right-4 flex gap-2">
         {deployed && (
           <span className="flex items-center bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">

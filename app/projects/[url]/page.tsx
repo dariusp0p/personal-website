@@ -53,7 +53,7 @@ export default async function ProjectPage({
           title={project.title}
           description={project.description}
           tech={project.tech || []}
-          inProgress={project.inprogress}
+          inProgress={project.inProgress}
           deployed={project.deployed}
           links={project.links}
         />

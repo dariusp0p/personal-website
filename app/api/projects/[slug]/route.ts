@@ -58,7 +58,7 @@ const tech = techRows.map(t => t.name);
     title: project.title,
     name: project.name,
     description: project.description,
-    inProgress: project.inprogress,
+    inProgress: project.in_progress,
     deployed: project.deployed,
     links,
     tech,

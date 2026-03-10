@@ -1,119 +1,86 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import ProjectCard from "../ProjectCard";
 
-const projects = [
-  {
-    title: "Desktop Application",
-    name: "AddPoster",
-    description:
-      "Cross-platform desktop app to automate posting in Facebook groups. Features custom HWID-bound license manager, monthly expiry, code obfuscation, auto-update, and packaged for Windows/macOS.",
-    tech: [
-      "Python",
-      "Selenium WebDriver",
-      "PyQt",
-      "SQLite",
-      "PyInstaller",
-      "Inno Setup",
-    ],
-    images: [
-      "/projects/AddPoster/demo_1.png",
-      "/projects/AddPoster/demo_2.png",
-      "/projects/AddPoster/demo_3.png",
-      "/projects/AddPoster/demo_4.png",
-      "/projects/AddPoster/demo_6.png",
-    ],
-    link: "/addposter",
-    inProgress: false,
-    deployed: true,
-  },
-  {
-    title: "Python Application",
-    name: "Hotel Simulator",
-    description:
-      "Python app with layered architecture, drag-and-drop floor canvas, advanced reservation checks, hotel occupancy simulator, timeline, statistics, and 3D graph.",
-    tech: ["Python", "Software Architecture", "PyQt", "SQLite"],
-    images: [
-      "/projects/HotelSimulator/demo_1.png",
-      "/projects/HotelSimulator/demo_2.png",
-      "/projects/HotelSimulator/demo_3.png",
-      "/projects/HotelSimulator/demo_4.png",
-    ],
-    link: "/hotelsimulator",
-    inProgress: false,
-    deployed: true,
-  },
-  {
-    title: "Full-stack Website Application",
-    name: "Mindify",
-    description:
-      "Hackathon project: Django app for real-time group learning, room creation, and AI integration. Built with a team during ITEC Hackathon.",
-    tech: [
-      "Python",
-      "Django",
-      "Bootstrap",
-      "Project Management",
-      "Team Coordination",
-    ],
-    images: [
-      "/projects/Mindify/demo_1.png",
-      "/projects/Mindify/demo_2.png",
-      "/projects/Mindify/demo_3.png",
-      "/projects/Mindify/demo_4.png",
-      "/projects/Mindify/demo_5.png",
-    ],
-    link: "/mindify",
-    inProgress: false,
-    deployed: false,
-  },
-  {
-    title: "Full-stack Website",
-    name: "Super Powers Team Website",
-    description:
-      "Presentation website with authentication, ready for video tutorial integration. Collaborated on visual design and brand identity, including team logo.",
-    tech: [
-      "Web Development",
-      "Web Design",
-      "HTML5",
-      "CSS",
-      "JavaScript",
-      "PHP",
-      "MySQL",
-      "Client Work",
-    ],
-    images: [
-      "/projects/ForeverWebsite/demo_1.png",
-      "/projects/ForeverWebsite/demo_2.png",
-      "/projects/ForeverWebsite/demo_3.png",
-      "/projects/ForeverWebsite/demo_4.png",
-    ],
-    link: "https://www.superpowersteam.ro",
-    inProgress: false,
-    deployed: true,
-  },
-];
-
 const Projects = () => {
+  const [projects, setProjects] = useState<any[]>([]);
+  const [tags, setTags] = useState<any[]>([]);
+  const [projectTags, setProjectTags] = useState<any[]>([]);
+  const [featuredIds, setFeaturedIds] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const resProjects = await fetch("/api/projects");
+        const projectsData = await resProjects.json();
+
+        const resTags = await fetch("/api/tags");
+        const tagsData = await resTags.json();
+
+        const resProjectTags = await fetch("/api/project_tags");
+        const projectTagsData = await resProjectTags.json();
+
+        const resFeatured = await fetch("/api/featured_projects");
+        const featuredData = await resFeatured.json();
+        const ids = featuredData.map((item: any) => item.project_id);
+
+        setProjects(projectsData);
+        setTags(tagsData);
+        setProjectTags(projectTagsData);
+        setFeaturedIds(ids);
+        setLoading(false);
+      } catch {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+  // Map tags to each project
+  const mappedProjects = projects.map((project) => {
+    const tagIds = projectTags
+      .filter((pt: any) => pt.project_id === project.id)
+      .map((pt: any) => pt.tag_id);
+    const tech = tags
+      .filter((tag: any) => tagIds.includes(tag.id))
+      .map((tag: any) => tag.name);
+    return { ...project, tech };
+  });
+
+  // Featured projects
+  const featuredProjects = mappedProjects.filter((project) =>
+    featuredIds.includes(project.id),
+  );
+
+  // Currently working on projects
+  const workingOnProjects = mappedProjects.filter(
+    (project) => project.in_progress,
+  );
+
   return (
     <section
       id="projects"
       className="flex flex-col items-center bg-background px-4 py-8 lg:p-64 lg:pt-10 lg:pb-16"
     >
       <h2 className="text-5xl font-bold mb-10 text-left w-full max-w-4xl mx-auto">
-        My Projects
+        Featured Projects
       </h2>
-      <div className="grid gap-8 w-full max-w-4xl mx-auto grid-cols-1 md:grid-cols-2">
-        {projects.map((project, idx) => (
-          <ProjectCard
-            key={idx}
-            title={project.title}
-            name={project.name}
-            description={project.description}
-            tech={project.tech}
-            link={project.link}
-            inProgress={project.inProgress}
-            deployed={project.deployed}
-          />
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-4xl mx-auto mb-12">
+        {loading && <div>Loading projects...</div>}
+        {!loading &&
+          featuredProjects.map((project) => (
+            <ProjectCard key={project.id} {...project} />
+          ))}
+      </div>
+      <h2 className="text-5xl font-bold mb-10 text-left w-full max-w-4xl mx-auto">
+        Currently Working On
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-4xl mx-auto mb-12">
+        {!loading &&
+          workingOnProjects.map((project) => (
+            <ProjectCard key={project.id} {...project} />
+          ))}
       </div>
       <a
         href="/projects"

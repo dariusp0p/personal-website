@@ -8,7 +8,12 @@ const pool = new Pool({
 
 console.log("API route HIT");
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> },
+) {
+  console.log("Inside GET function for [slug] route");
+
   const { slug } = await params;
 
   console.log("API route called with slug:", slug);
@@ -16,43 +21,44 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
   // Fetch main project
   const { rows: projectRows } = await pool.query(
     `SELECT * FROM projects WHERE url = $1 LIMIT 1`,
-    [`/${slug}`]
+    ["/" + slug],
   );
 
   console.log("Project rows:", projectRows);
   console.log("HEY");
-  
+
   const project = projectRows[0];
-  if (!project) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!project)
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   // Fetch links
   const { rows: links } = await pool.query(
     `SELECT type, value FROM project_links WHERE project_id = $1`,
-    [project.id]
+    [project.id],
   );
 
   // Fetch tech tags
-const { rows: techRows } = await pool.query(
-  `SELECT tags.name FROM project_tags
+  const { rows: techRows } = await pool.query(
+    `SELECT tags.name FROM project_tags
    JOIN tags ON project_tags.tag_id = tags.id
    WHERE project_tags.project_id = $1`,
-  [project.id]
-);
-const tech = techRows.map(t => t.name);
+    [project.id],
+  );
+  const tech = techRows.map((t) => t.name);
 
   // Fetch images
   const { rows: imageRows } = await pool.query(
     `SELECT path FROM project_images WHERE project_id = $1`,
-    [project.id]
+    [project.id],
   );
-  const images = imageRows.map(img => img.path);
+  const images = imageRows.map((img) => img.path);
 
   // Fetch markdowns
   const { rows: markdownRows } = await pool.query(
     `SELECT path FROM project_markdowns WHERE project_id = $1`,
-    [project.id]
+    [project.id],
   );
-  const markdowns = markdownRows.map(md => md.path);
+  const markdowns = markdownRows.map((md) => md.path);
 
   return NextResponse.json({
     title: project.title,

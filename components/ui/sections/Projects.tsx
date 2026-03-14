@@ -45,7 +45,7 @@ const Projects = () => {
     const tech = tags
       .filter((tag: any) => tagIds.includes(tag.id))
       .map((tag: any) => tag.name);
-    return { ...project, tech };
+    return { ...project, tech, link: project.url };
   });
 
   // Featured projects
@@ -77,6 +77,7 @@ const Projects = () => {
         Currently Working On
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-4xl mx-auto mb-12">
+        {loading && <div>Loading projects...</div>}
         {!loading &&
           workingOnProjects.map((project) => (
             <ProjectCard key={project.id} {...project} />

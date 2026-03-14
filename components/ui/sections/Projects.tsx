@@ -1,50 +1,34 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 import ProjectCard from "../ProjectCard";
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 const Projects = () => {
-  const [projects, setProjects] = useState<any[]>([]);
-  const [tags, setTags] = useState<any[]>([]);
-  const [projectTags, setProjectTags] = useState<any[]>([]);
-  const [featuredIds, setFeaturedIds] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: projects = [], isLoading: loadingProjects } = useSWR(
+    "/api/projects",
+    fetcher,
+  );
+  const { data: tags = [], isLoading: loadingTags } = useSWR(
+    "/api/tags",
+    fetcher,
+  );
+  const { data: projectTags = [], isLoading: loadingProjectTags } = useSWR(
+    "/api/project_tags",
+    fetcher,
+  );
+  const { data: featured = [], isLoading: loadingFeatured } = useSWR(
+    "/api/featured_projects",
+    fetcher,
+  );
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const resProjects = await fetch("/api/projects", {
-          cache: "force-cache",
-        });
-        const projectsData = await resProjects.json();
+  const loading =
+    loadingProjects || loadingTags || loadingProjectTags || loadingFeatured;
 
-        const resTags = await fetch("/api/tags", { cache: "force-cache" });
-        const tagsData = await resTags.json();
-
-        const resProjectTags = await fetch("/api/project_tags", {
-          cache: "force-cache",
-        });
-        const projectTagsData = await resProjectTags.json();
-
-        const resFeatured = await fetch("/api/featured_projects", {
-          cache: "force-cache",
-        });
-        const featuredData = await resFeatured.json();
-        const ids = featuredData.map((item: any) => item.project_id);
-
-        setProjects(projectsData);
-        setTags(tagsData);
-        setProjectTags(projectTagsData);
-        setFeaturedIds(ids);
-        setLoading(false);
-      } catch {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
+  const featuredIds = featured.map((item: any) => item.project_id);
 
   // Map tags to each project
-  const mappedProjects = projects.map((project) => {
+  const mappedProjects = projects.map((project: any) => {
     const tagIds = projectTags
       .filter((pt: any) => pt.project_id === project.id)
       .map((pt: any) => pt.tag_id);
@@ -55,13 +39,13 @@ const Projects = () => {
   });
 
   // Featured projects
-  const featuredProjects = mappedProjects.filter((project) =>
+  const featuredProjects = mappedProjects.filter((project: any) =>
     featuredIds.includes(project.id),
   );
 
   // Currently working on projects
   const workingOnProjects = mappedProjects.filter(
-    (project) => project.in_progress,
+    (project: any) => project.in_progress,
   );
 
   return (
@@ -75,7 +59,7 @@ const Projects = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-4xl mx-auto mb-12">
         {loading && <div>Loading projects...</div>}
         {!loading &&
-          featuredProjects.map((project) => (
+          featuredProjects.map((project: any) => (
             <ProjectCard key={project.id} {...project} />
           ))}
       </div>
@@ -85,7 +69,7 @@ const Projects = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-4xl mx-auto mb-12">
         {loading && <div>Loading projects...</div>}
         {!loading &&
-          workingOnProjects.map((project) => (
+          workingOnProjects.map((project: any) => (
             <ProjectCard key={project.id} {...project} />
           ))}
       </div>

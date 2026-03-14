@@ -12,16 +12,22 @@ const Projects = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const resProjects = await fetch("/api/projects");
+        const resProjects = await fetch("/api/projects", {
+          cache: "force-cache",
+        });
         const projectsData = await resProjects.json();
 
-        const resTags = await fetch("/api/tags");
+        const resTags = await fetch("/api/tags", { cache: "force-cache" });
         const tagsData = await resTags.json();
 
-        const resProjectTags = await fetch("/api/project_tags");
+        const resProjectTags = await fetch("/api/project_tags", {
+          cache: "force-cache",
+        });
         const projectTagsData = await resProjectTags.json();
 
-        const resFeatured = await fetch("/api/featured_projects");
+        const resFeatured = await fetch("/api/featured_projects", {
+          cache: "force-cache",
+        });
         const featuredData = await resFeatured.json();
         const ids = featuredData.map((item: any) => item.project_id);
 

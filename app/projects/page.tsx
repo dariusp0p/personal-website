@@ -76,16 +76,22 @@ export default function ProjectsPage() {
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const resProjects = await fetch("/api/projects");
+        const resProjects = await fetch("/api/projects", {
+          cache: "force-cache",
+        });
         const projectsData = await resProjects.json();
 
-        const resTagCategories = await fetch("/api/tag_categories");
+        const resTagCategories = await fetch("/api/tag_categories", {
+          cache: "force-cache",
+        });
         const tagCategoriesData = await resTagCategories.json();
 
-        const resTags = await fetch("/api/tags");
+        const resTags = await fetch("/api/tags", { cache: "force-cache" });
         const tagsData = await resTags.json();
 
-        const resProjectTags = await fetch("/api/project_tags");
+        const resProjectTags = await fetch("/api/project_tags", {
+          cache: "force-cache",
+        });
         const projectTagsData = await resProjectTags.json();
 
         setFetchedProjects(projectsData);

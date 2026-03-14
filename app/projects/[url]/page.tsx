@@ -25,7 +25,7 @@ export default async function ProjectPage({
     cache: "no-store",
   });
   if (!res.ok) {
-    return <div>Project not found</div>;
+    return <div>Project not found! Searched with slug: {slug}</div>;
   }
   const project = await res.json();
 

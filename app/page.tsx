@@ -7,7 +7,7 @@ import Footer from "@/components/ui/sections/Footer";
 const navItems = [
   { name: "Home", link: "/" },
   { name: "Projects", link: "/projects" },
-  { name: "Education", link: "/education" },
+  { name: "About Me", link: "/about" },
 ];
 
 export default function Home() {

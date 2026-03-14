@@ -59,13 +59,13 @@ const Hero = () => {
             />
           </div>
         </div>
-        <AboutMeCard
+        {/* <AboutMeCard
           paragraphs={[
             "Second-year CS student at UBB Cluj-Napoca with early experience in web development and software engineering. I’ve built and deployed both web and desktop applications, taking them from idea to production.",
             "I’m currently exploring Cloud Infrastructure, DevOps, and AI/ML. I’m looking for an internship where I can contribute meaningful work while learning as much as possible from experienced engineers.",
             "Outside of tech, I stay active through music and martial arts. As Music Director in my local church band, I play piano and coordinate live performances, which has strengthened my discipline, teamwork, and focus under pressure. I have also practiced Muay Thai and Karate, experiences that taught me resilience, self-discipline, and perseverance, qualities I carry into both personal and professional challenges.",
           ]}
-        />
+        /> */}
       </section>
     </AuroraBackground>
   );

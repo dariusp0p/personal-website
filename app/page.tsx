@@ -17,7 +17,7 @@ export default function Home() {
       <main>
         <Hero />
         <Projects />
-        <Skills />
+        {/* <Skills /> */}
         <Footer />
       </main>
     </>

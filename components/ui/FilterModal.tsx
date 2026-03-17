@@ -34,8 +34,14 @@ const FilterModal: React.FC<FilterModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-xs mt-24 px-4">
-      <div className="bg-primary rounded-lg shadow-lg p-6 w-full max-w-md border-2 border-border">
+    <div
+      className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-xs mt-24 px-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-primary rounded-lg shadow-lg p-6 w-full max-w-md border-2 border-border max-h-screen overflow-y-auto mt-28"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           className="mb-4 text-secondary-foreground flex items-center gap-1 transition-transform duration-200 hover:scale-105 hover:text-accent-foreground cursor-pointer"
           onClick={onClose}
